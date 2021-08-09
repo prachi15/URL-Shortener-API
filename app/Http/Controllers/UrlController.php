@@ -18,8 +18,8 @@ class UrlController extends Controller
             $topurls = UrlShortener::latest()->limit(100)->get();
             return Datatables::of($topurls)
                 ->addIndexColumn()
-                ->addColumn('action', function ($row) {
-                    $short_url = '<a href="'.$row->short_url.'" target="_blank">'.$row->short_url.'</a>';
+                ->addColumn('action', function ($row) {                	
+                    $short_url = '<a href="javascript:void(0);" class="url">'.$row->short_url.'</a>';
                     return $short_url;
                 })
                 ->rawColumns(['action'])
@@ -41,6 +41,7 @@ class UrlController extends Controller
 			'title' => $request->get('title'),
 			'url' => $request->get('url'),
 			'short_url' => $bitlyUrl,
+			'nsfw' => $request->get('nsfw') ? $request->get('nsfw') : '0',
 		]);
 
 		$notification = array(

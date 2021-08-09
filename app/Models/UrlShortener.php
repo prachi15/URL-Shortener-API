@@ -16,6 +16,7 @@ class UrlShortener extends Model
     protected $fillable = [
     	'title',
     	'url',
-    	'short_url'
+    	'short_url',
+      'nsfw'
     ];
 }

@@ -66,6 +66,12 @@
                         </span>
                       @enderror
                     </div>
+                    <div class="form-group mb-0">
+                      <div class="custom-control custom-checkbox">
+                        <input type="checkbox" name="nsfw" class="custom-control-input" id="nsfw" value="1">
+                        <label class="custom-control-label" for="nsfw">Mark Link as NSFW?</label>
+                      </div>
+                    </div>
                   </div>
                   <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Submit</button>

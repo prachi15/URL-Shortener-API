@@ -16,6 +16,10 @@
   <!-- Toastr -->
   <link href="{{ asset('public/css/toastr.min.css')}}" rel="stylesheet" />
 
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="{{ asset('public/css/bootstrap.min.css') }}">
+
+
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -29,7 +33,7 @@
               <h1>URL shortener API</h1>
             </div>
             <div class="col-sm-12 col-md-2 col-lg-2">
-              <a href="{{ url('shorturl') }}" class="btn btn-info float-right">Add New URL</a>
+              <a href="{{ url('shorturl') }}" class="btn btn-info float-right" id="add_url_form">Add New URL</a>
             </div>
             <div class="col-sm-12 col-md-12 col-lg-12">
             <ol class="breadcrumb">
@@ -72,6 +76,20 @@
     </div>
   </div>
 
+  <!-- Modal -->
+<div class="modal fade" id="alert_nsfw" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">NSFW Alert</h5>
+      </div>
+      <div class="modal-body">
+        <p>This link may contain content that is not appropriate for all audiences.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- jQuery -->
 <script src="{{ asset('public/plugins/jquery/jquery.min.js') }}"></script>
 
@@ -86,35 +104,36 @@
 <!-- Toastr -->
 <script src="{{ asset('public/js/toastr.min.js')}}"></script>
 
+<!-- Bootstrap -->
+<script src="{{ asset('public/js/bootstrap.min.js') }}"></script>
+
 <script>
   $(function () {
 
-    $(function() {
-      toastr.options = {
-          "newestOnTop": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "closeButton": true,
-        }
-        @if(Session::has('message'))
-          var type="{{Session::get('alert-type','info')}}"
+    toastr.options = {
+      "newestOnTop": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "closeButton": true,
+    }
+    @if(Session::has('message'))
+      var type="{{Session::get('alert-type','info')}}"
 
-          switch(type){
-              case 'info':
-                toastr.info("{{ Session::get('message') }}");
-                  break;
-              case 'success':
-                  toastr.success("{{ Session::get('message') }}");
-                  break;
-              case 'warning':
-                  toastr.warning("{{ Session::get('message') }}");
-                  break;
-              case 'error':
-                  toastr.error("{{ Session::get('message') }}");
-                  break;
-          }
-        @endif
-    });
+      switch(type){
+          case 'info':
+            toastr.info("{{ Session::get('message') }}");
+              break;
+          case 'success':
+              toastr.success("{{ Session::get('message') }}");
+              break;
+          case 'warning':
+              toastr.warning("{{ Session::get('message') }}");
+              break;
+          case 'error':
+              toastr.error("{{ Session::get('message') }}");
+              break;
+      }
+    @endif
 
    var dataTable = $('#table_url').DataTable({
       processing: true,
@@ -125,6 +144,21 @@
         { data: 'title', name: 'title' },        
         {data: 'action', name: 'action'},
       ]
+    });
+
+    $('#table_url tbody').on('click', 'tr', function () {
+      var data = dataTable.row( this ).data();
+      if (data['nsfw'] == 1) {
+      $('#alert_nsfw').modal('show');
+      setTimeout(function() {
+        $('#alert_nsfw').modal('hide');
+        window.open(data['short_url'], '_blank').focus();
+      }, 10000);      
+      }
+      else {
+        $('#alert_nsfw').modal('hide'); 
+        window.open(data['short_url'], '_blank').focus();
+      }
     });
 
   });

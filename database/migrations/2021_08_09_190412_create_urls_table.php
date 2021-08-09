@@ -18,6 +18,7 @@ class CreateUrlsTable extends Migration
             $table->string('title');
             $table->string('url');
             $table->string('short_url');
+            $table->enum('nsfw', ['1', '0'])->default('0');
             $table->timestamps();
         });
     }
